@@ -1,95 +1,63 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+/* RSC */
+// import Courses from '@/app/components/Courses'
+////////////////////////////////////////////////////
+/* RCC */
+'use client'
+import { useState, useEffect } from 'react'
+import LoadingPage from './loading'
+import Courses from './components/Courses'
+import CourseSearch from './components/CourseSearch'
+/////////////////////////////////////////////////////
+import Link from 'next/link'
+import styles from './globals.css'
 
-export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
+
+export default function HomePage() {
+    const [courses, setCourses] = useState([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const fetchCourses = async () => {
+            const res = await fetch('/api/courses')
+            const data = await res.json()
+            // console.log(data)
+            setCourses(data)
+            setLoading(false)
+        }
+        fetchCourses()
+    }, [])
+
+    if (loading) {
+        return <LoadingPage />
+    }
+
+    return (
         <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+            <h1>HomePage</h1>
+            <h2>Welcome To Charlie's Web Site!</h2>
+
+            <CourseSearch handleSearch={(data) => setCourses(data) } />
+
+            {/* 
+                <ul>
+                    <li>
+                        <Link href='/'>Home</Link>
+                    </li>
+                    <li>
+                        <Link href='/about'>About</Link>
+                    </li>
+                    <li>
+                        <Link href='/about/team'>Our Team</Link>
+                    </li>
+                </ul> 
+            */}
+
+            {/* RSC */}
+            {/* <Courses /> */}
+
+            {/* RCC */}
+            <Courses courses={courses} />
+
         </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+    )
 }
